@@ -1,6 +1,8 @@
+
 package com.duoc.backend.user;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,38 +11,92 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class UserDataInitializer {
 
     @Bean
+    @ConditionalOnProperty(
+        name = "app.bootstrap.enabled",
+        havingValue = "true"
+    )
     CommandLineRunner initUsers(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder) {
 
         return args -> {
 
-            if (userRepository.count() == 0) {
+            // Obtener contraseñas desde variables de entorno
+            String adminPassword =
+                    obtenerVariable("BOOTSTRAP_ADMIN_PASSWORD");
 
-                User user1 = new User();
-                user1.setUsername("admin");
-                user1.setEmail("admin@duoc.cl");
-                user1.setPassword(passwordEncoder.encode("Admin123"));
-                user1.setEnabled(true);
+            String usuario1Password =
+                    obtenerVariable("BOOTSTRAP_USUARIO1_PASSWORD");
 
-                User user2 = new User();
-                user2.setUsername("usuario1");
-                user2.setEmail("usuario1@duoc.cl");
-                user2.setPassword(passwordEncoder.encode("Usuario123"));
-                user2.setEnabled(true);
+            String usuario2Password =
+                    obtenerVariable("BOOTSTRAP_USUARIO2_PASSWORD");
 
-                User user3 = new User();
-                user3.setUsername("usuario2");
-                user3.setEmail("usuario2@duoc.cl");
-                user3.setPassword(passwordEncoder.encode("Usuario456"));
-                user3.setEnabled(true);
+            // Crear o actualizar usuarios iniciales
+            guardarUsuario(
+                userRepository,
+                passwordEncoder,
+                "admin",
+                "admin@duoc.cl",
+                adminPassword
+            );
 
-                userRepository.save(user1);
-                userRepository.save(user2);
-                userRepository.save(user3);
+            guardarUsuario(
+                userRepository,
+                passwordEncoder,
+                "usuario1",
+                "usuario1@duoc.cl",
+                usuario1Password
+            );
 
-                System.out.println("Usuarios iniciales creados correctamente.");
-            }
+            guardarUsuario(
+                userRepository,
+                passwordEncoder,
+                "usuario2",
+                "usuario2@duoc.cl",
+                usuario2Password
+            );
         };
+    }
+
+    private static String obtenerVariable(String nombre) {
+
+        String valor = System.getenv(nombre);
+
+        if (valor == null || valor.isBlank()) {
+            throw new IllegalStateException(
+                "Variable de entorno no configurada: " + nombre
+            );
+        }
+
+        if (valor.length() < 12) {
+            throw new IllegalStateException(
+                "La contraseña debe tener al menos 12 caracteres: "
+                + nombre
+            );
+        }
+
+        return valor;
+    }
+
+    private static void guardarUsuario(
+            UserRepository repository,
+            PasswordEncoder encoder,
+            String username,
+            String email,
+            String password) {
+
+        User usuario = repository.findByUsername(username);
+
+        if (usuario == null) {
+            usuario = new User();
+            usuario.setUsername(username);
+            usuario.setEmail(email);
+            usuario.setEnabled(true);
+        }
+
+        // Guardar únicamente el hash BCrypt
+        usuario.setPassword(encoder.encode(password));
+
+        repository.save(usuario);
     }
 }
