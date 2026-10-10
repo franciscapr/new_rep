@@ -88,15 +88,13 @@
 			<artifactId>bouncy-castle-adapter</artifactId>
 			<version>9.1.0</version>
 		</dependency>
-<<<<<<< HEAD
 
-=======
 		<dependency>
     		<groupId>org.jacoco</groupId>
     		<artifactId>jacoco-maven-plugin</artifactId>
     		<version>0.8.13</version>
 		</dependency>
->>>>>>> cee53d6f20b35fd1d96dc9c997ecd9c0e6fac3fb
+
 		
 	</dependencies>
 
@@ -106,7 +104,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-<<<<<<< HEAD
+
 	<plugin>
 		<groupId>org.owasp</groupId>
 		<artifactId>dependency-check-maven</artifactId>
@@ -124,20 +122,9 @@
 			</execution>
 		</executions>
 	</plugin>
-=======
-			<plugin> 
-              <groupId>org.owasp</groupId> 
-              <artifactId>dependency-check-maven</artifactId> 
-              <version>12.1.1</version> 
-              <executions> 
-                  <execution> 
-                      <goals> 
-                          <goal>check</goal> 
-                      </goals> 
-                  </execution> 
-              </executions> 
-            </plugin>
->>>>>>> cee53d6f20b35fd1d96dc9c997ecd9c0e6fac3fb
+
+			
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>

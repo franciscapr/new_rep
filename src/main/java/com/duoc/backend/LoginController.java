@@ -9,6 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @RestController
 public class LoginController {
@@ -25,19 +28,31 @@ public class LoginController {
     @PostMapping("login")
     public String login(@RequestBody User loginRequest) {
 
-        final UserDetails userDetails =
-                userDetailsService.loadUserByUsername(loginRequest.getUsername());
+        final UserDetails userDetails;
+
+        try {
+            userDetails = userDetailsService.loadUserByUsername(
+                loginRequest.getUsername()
+            );
+        } catch (UsernameNotFoundException e) {
+            throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Credenciales inválidas"
+            );
+        }
 
         if (!passwordEncoder.matches(
                 loginRequest.getPassword(),
                 userDetails.getPassword())) {
 
-            throw new RuntimeException("Invalid login");
+            throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Credenciales inválidas"
+            );
         }
 
-        String token =
-                jwtAuthtenticationConfig.getJWTToken(loginRequest.getUsername());
-
-        return token;
+        return jwtAuthtenticationConfig.getJWTToken(
+            loginRequest.getUsername()
+        );
     }
 }

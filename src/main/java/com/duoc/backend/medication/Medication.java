@@ -16,21 +16,20 @@ public class Medication {
 
     private Double cost;
 
-<<<<<<< HEAD
+
     // Constructor vacío requerido por JPA
     public Medication() {
     }
-=======
->>>>>>> cee53d6f20b35fd1d96dc9c997ecd9c0e6fac3fb
+
+
 
     public Medication(String name, double price) {
         this.name = name;
         this.cost = price;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> cee53d6f20b35fd1d96dc9c997ecd9c0e6fac3fb
+
+
     // Getters and Setters
     public Long getId() {
         return id;

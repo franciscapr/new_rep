@@ -64,10 +64,8 @@ public class User implements UserDetails {
         this.password = password;
     }
     @Override
-    public Collection getAuthorities() {
-        // TODO Auto-generated method stub
-        //throw new UnsupportedOperationException("Unimplemented method 'getAuthorities'");
-        return null;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return java.util.Collections.emptyList();
     }
 
     @Override

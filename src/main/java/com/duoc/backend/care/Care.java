@@ -16,22 +16,22 @@ public class Care {
 
     private Double cost;
 
-<<<<<<< HEAD
+
     // Constructor vacío requerido por JPA
     public Care() {
     }
 
-=======
->>>>>>> cee53d6f20b35fd1d96dc9c997ecd9c0e6fac3fb
+
+
     public Care(String description, double cost) {
         this.name = description;
         this.cost = cost;
     }
 
-<<<<<<< HEAD
-=======
+
+
     // Getters and Setters
->>>>>>> cee53d6f20b35fd1d96dc9c997ecd9c0e6fac3fb
+
     public Long getId() {
         return id;
     }

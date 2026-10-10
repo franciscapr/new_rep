@@ -8,8 +8,16 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.duoc.backend.user.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import static org.mockito.Mockito.when;
+
+import static org.junit.jupiter.api.Assertions.*;
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HttpRequestTest {
 
@@ -18,6 +26,26 @@ class HttpRequestTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @MockitoBean
+private UserRepository userRepository;
+
+    @BeforeEach
+    void configurarUsuarioPrueba() {
+
+        User usuario = new User();
+
+        usuario.setUsername("prueba");
+        usuario.setPassword(
+            new BCryptPasswordEncoder().encode("123456")
+        );
+        usuario.setEnabled(true);
+
+        when(userRepository.findByUsername("prueba"))
+            .thenReturn(usuario);
+    }
+
+
 
     @Test
     void testLoginSuccess() {
@@ -61,6 +89,6 @@ class HttpRequestTest {
         ResponseEntity<String> response = restTemplate.postForEntity(baseUrl, request, String.class);
 
         // Assert
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 }
