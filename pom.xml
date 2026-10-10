@@ -30,6 +30,7 @@
 		<java.version>17</java.version>
 
 		<tomcat.version>10.1.60</tomcat.version>
+		 <sonar.organization>franciscapr</sonar.organization>
 	</properties>
 	<dependencies>
 		<dependency>
