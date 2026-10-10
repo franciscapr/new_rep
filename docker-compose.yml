@@ -1,0 +1,43 @@
+services:
+
+  mysql-cdy2203:
+    image: mysql:8.4
+    container_name: mysql-cdy2203
+
+    environment:
+      MYSQL_DATABASE: mydatabase
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: rootpassword
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+
+  backend:
+    build: .
+    container_name: backend-cdy2203
+
+    depends_on:
+      mysql-cdy2203:
+        condition: service_healthy
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-cdy2203:3306/mydatabase
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: password
+
+    ports:
+      - "8180:8180"
+
+volumes:
+  mysql_data:
