@@ -1,5 +1,6 @@
 package com.duoc.backend.patient;
 
+import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +22,12 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping("/register")
-    public String greetings(@RequestParam(value="name", defaultValue="World") String name) {
-        return "Hello {" + name + "}";
+    @GetMapping(
+        value = "/patient/greetings",
+        produces = MediaType.TEXT_PLAIN_VALUE
+    )
+    public String greetings() {
+        return "Hello";
     }
 
     @GetMapping
