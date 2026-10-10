@@ -35,6 +35,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-cdy2203:3306/mydatabase
       SPRING_DATASOURCE_USERNAME: myuser
       SPRING_DATASOURCE_PASSWORD: password
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET no configurada}
 
     ports:
       - "8180:8180"
